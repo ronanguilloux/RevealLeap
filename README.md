@@ -9,6 +9,8 @@ Author
 Usage
 -----
 
+edit the Reveal's `index.html` file & add a call to the provided `reveal.leap.js` file
+
 ``` html
 		<script src="lib/js/head.min.js"></script>
 		<script src="js/reveal.min.js"></script>
