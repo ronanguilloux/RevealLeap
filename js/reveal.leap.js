@@ -8,8 +8,8 @@ var RevealLeap = function() {
     "use strict";
 
     var threshold = 0.9;
-    var lastTime = -1;
     var frameRate = 0;
+    var eventDispatched = false;
 
     // Support both the WebSocket and MozWebSocket objects
     window.WebSocket = window.WebSocket || window.MozWebSocket || function() {};
@@ -23,23 +23,22 @@ var RevealLeap = function() {
 
     ws.onmessage = function(event) {
         frameRate++;
-        if(0 === frameRate % 5) {
+        if (0 === frameRate % 5) {
             var obj = JSON.parse(event.data);
             if (obj.gestures && obj.gestures.length){
                 var gesture = obj.gestures[0];
                 if ("swipe" === gesture.type) {
-                    var currentTime = new Date().getTime();
-                    if (-1 == lastTime){
-                        lastTime = currentTime;
-                        if (gesture.direction[0] < -threshold) { // horizontal swipes only
-                            Reveal.prev();
-                        } else if (gesture.direction[0] > threshold) {
-                            Reveal.next();
-                        }
+                    if (!eventDispatched && gesture.direction[0] < -threshold) { // horizontal swipes only
+                        eventDispatched = true;
+                        Reveal.prev();
+                    } else if (!eventDispatched && gesture.direction[0] > threshold) {
+                        eventDispatched = true;
+                        Reveal.next();
                     }
-                    else if (300 < currentTime - lastTime) {
-                        lastTime = -1;
-                    }
+
+                    window.setTimeout(function() {
+                        eventDispatched = false;
+                    }, 300);
                 }
             }
         }
