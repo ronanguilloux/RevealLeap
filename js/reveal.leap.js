@@ -7,7 +7,7 @@
 var RevealLeap = function() {
     "use strict";
 
-    var threshold = 0.6;
+    var threshold = 0.9;
     var lastTime = -1;
     var frameRate = 0;
 
