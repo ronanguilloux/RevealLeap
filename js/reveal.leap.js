@@ -4,15 +4,17 @@
  * @author https://github.com/jefBinomed
  */
 
-var RevealLeap = (function() {
-    var threshold = 0.9;
+var RevealLeap = function() {
+    "use strict";
+
+    var threshold = 0.6;
     var lastTime = -1;
     var frameRate = 0;
 
     // Support both the WebSocket and MozWebSocket objects
-    WebSocket = WebSocket || MozWebSocket || {};
+    window.WebSocket = window.WebSocket || window.MozWebSocket || function() {};
 
-    ws = new WebSocket("ws://localhost:6437/");
+    var ws = new window.WebSocket("ws://localhost:6437/");
     ws.onopen = function(event) {
         console.log("ws opened!");
          var enableMessage = JSON.stringify({enableGestures: true});
@@ -50,4 +52,4 @@ var RevealLeap = (function() {
     ws.onerror = function(event) {
         console.log("ERROR: " + event);
     }
-}());
+}();
